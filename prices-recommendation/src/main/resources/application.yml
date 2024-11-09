@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: xm-crypto-recommendation
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cryptorecommenddb
+    username: cryptorecommend
+    password: secret
+    hikari:
+      schema: public
+      minimum-idle: 5
+      maximum-pool-size: 20
+  cache:
+    jcache:
+      provider: com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
+    cache-names:
+    - buckets
+    caffeine:
+      spec: maximumSize=100000,expireAfterAccess=3600s
+bucket4j:
+  enabled: true
+  filters:
+  - cache-name: buckets
+    url: .*
+    rate-limits:
+      - cache-key: getRemoteAddr()
+        bandwidths:
+        - capacity: 60
+          time: 1
+          unit: minutes

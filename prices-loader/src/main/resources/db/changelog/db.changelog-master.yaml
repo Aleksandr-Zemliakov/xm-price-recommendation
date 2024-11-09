@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Aleksandr Zemliakov
+      comment: Initial structure of crypto_price table
+      changes:
+        - sql:
+            sql: create table crypto_price (
+                   price_ts timestamp(3) NOT NULL,
+                   currency_code text NOT NULL,
+                   price numeric NOT NULL,
+                   CONSTRAINT crypto_price_pk PRIMARY KEY (price_ts, currency_code)
+                 );
+      rollback:
+        - sql:
+            sql: drop table crypto_price;
+  - changeSet:
+      id: 2
+      author: Aleksandr Zemliakov
+      comment: Index creation on crypto_price table to support min/max queries on currency and price
+      changes:
+        - sql:
+            sql: create index ik_crypto_price_currency_price on crypto_price using btree(currency_code, price);
+      rollback:
+        - sql:
+            sql: drop index ik_crypto_price_currency_price;
+  - changeSet:
+      id: 3
+      author: Aleksandr Zemliakov
+      comment: Tag with initial database structure version
+      changes:
+        - tagDatabase:
+            tag: "1.0.0"
