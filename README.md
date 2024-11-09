@@ -43,9 +43,20 @@ Information on available endpoints is listed on [Service OpenAPI specification](
 
 ### Room for improvement
 
-#### Database choise
+#### Database choice
 Postgres was chosen due to my familiarity with it, however, given the time-series nature of the data and analytical nature of requests - it might be beneficial to move to purpose-build time-series database like TimeStream.
 
 #### Caching of responses
 It might be beneficial to cache responses of most heavy-weight analytics queries spanning large periods of data.
 Redis can be used as a distributed cache, with Recommendation application lazily caching results of queries and Loader invalidating such caches upon arrival of new data.
+
+#### Loader application
+Below are things I'm concious of, but (mostly) haven't had the time to implement properly:
+1. Loader is implemented as CommandLineRunner, so it loads rates once upon startup, proper solution would be watch for new files to be uploaded (e.g., by schedule via Spring Scheduler) and move processed files to a separate location
+2. CryptoPriceItemMapper can probably be replaced with something like OpenCSV to avoid converting values by hand
+3. Integration test is basically "if no errors are occurred - test passed": haven't had the time to implement proper cross-checks with database
+
+#### Recommendation application
+Below are things I'm concious of, but (mostly) haven't had the time to implement properly:
+1. Haven't had the time to implement Rest Controller integration tests, something like RestAssured can be used
+2. Database structure in integration test is created via sql file (copied over from Liquibase script located in Loader as a quick-and-dirty solution), probably it is worth having a standalone component to deploy database structure and lauch it in docker-compose before applications' startup.
