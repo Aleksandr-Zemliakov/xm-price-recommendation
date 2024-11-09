@@ -6,7 +6,6 @@ import org.test.task.xm.crypto.recommendation.price.model.CryptoPriceItem;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
